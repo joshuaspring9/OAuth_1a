@@ -19,11 +19,11 @@
 
 class OAuth_1a_Exception extends Exception
 {
-	protected $curl_headers;
-	protected $curl_body;
-	protected $curl_code;
-	protected $curl_size;
-	protected $json;
+	private $curl_headers;
+	private $curl_body;
+	private $curl_code;
+	private $curl_size;
+	private $json;
 	
 	public function __construct($message, $code, $curl_headers, $curl_body, $curl_code, $curl_size)
 	{
