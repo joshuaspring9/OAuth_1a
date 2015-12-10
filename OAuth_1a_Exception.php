@@ -8,11 +8,11 @@
 * @package OAuth_1a_Exception
 * @author Joshua Zeitlinger <joshz@source3.io>
 * @link  https://github.com/joshuaspring9/Oauth_1a
-* @version  0.1
+* @version  0.1.1
 *
 *
 * History:
-* version 0.1 - first version
+* version 0.1.1 - file added
 *
 */
 
