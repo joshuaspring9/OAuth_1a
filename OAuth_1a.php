@@ -6,7 +6,7 @@
 * PHP's PECL OAuth method of functioning as closely as possible
 *
 * @package OAuth_1a
-* @author Joshua Zeitlinger <joshz@source3.io>
+* @author Joshua Zeitlinger <me@joshuazeitlinger.com>
 * @link  https://github.com/joshuaspring9/Oauth_1a
 * @version  0.1.1
 *
