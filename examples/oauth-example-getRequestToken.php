@@ -1,4 +1,20 @@
 <?php
+/**
+* oauth-example-getRequestToken
+* 
+* Demonstrate the use of the getRequestToken() function from the OAuth_1a class
+*
+* @package OAuth_1a
+* @author Joshua Zeitlinger <me@joshuazeitlinger.com>
+* @link  https://github.com/joshuaspring9/Oauth_1a
+* @version  0.1.1
+*
+*
+* History:
+* version 0.1.1 - file created
+*
+*/
+
 //show all errors while we debug
 error_reporting(E_ALL);
 ini_set('display_errors', 1);
