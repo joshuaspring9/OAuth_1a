@@ -21,7 +21,7 @@ ini_set('display_errors', 1);
 
 session_start();
 
-require "OAuth_1a.php";
+require "../OAuth_1a.php";
 
 $s = new OAuth_1a("consumer","consumer_secret","HMAC-SHA1","AUTHORIZATION");
 
