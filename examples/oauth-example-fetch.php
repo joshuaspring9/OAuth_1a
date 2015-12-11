@@ -20,7 +20,7 @@ error_reporting(E_ALL);
 ini_set('display_errors', 1);
 
 
-require "OAuth_1a.php";
+require "../OAuth_1a.php";
 
 $s = new OAuth_1a("consumer","consumer_secret","HMAC-SHA1","AUTHORIZATION");
 
