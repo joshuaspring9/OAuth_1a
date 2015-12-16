@@ -1,17 +1,18 @@
 <?php
 /**
 * oauth-example-getAccessToken
-* 
+*
 * Demonstrate the use of the getAccessToken() function from the OAuth_1a class
 *
 * @package OAuth_1a
 * @author Joshua Zeitlinger <me@joshuazeitlinger.com>
 * @link  https://github.com/joshuaspring9/Oauth_1a
-* @version  0.1.1
+* @version  0.2
 *
 *
 * History:
 * version 0.1.1 - file created
+* version 0.2 - add try/catch block for exceptions
 *
 */
 
@@ -23,12 +24,20 @@ session_start();
 
 require "../OAuth_1a.php";
 
-$s = new OAuth_1a("consumer","consumer_secret","HMAC-SHA1","AUTHORIZATION");
+try{
 
-$s->setToken($_GET['oauth_token'], $_SESSION['secret']);
+  $s = new OAuth_1a("consumer","consumer_secret","HMAC-SHA1","AUTHORIZATION");
 
-$result = $s->getAccessToken("http://api.shapeways.com/oauth1/access_token/v1",$_GET['oauth_verifier'], "GET");
+  $s->setToken($_GET['oauth_token'], $_SESSION['secret']);
 
-$data = $s->getLastResponse();
+  $result = $s->getAccessToken("http://api.shapeways.com/oauth1/access_token/v1",$_GET['oauth_verifier'], "GET");
 
-print_r($data);
+  $data = $s->getLastResponse();
+
+  print_r($data);
+
+} catch (OAuth_1a_Exception $e){
+
+  print_r($e->getAll());
+
+}
