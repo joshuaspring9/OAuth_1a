@@ -1,17 +1,18 @@
 <?php
 /**
 * oauth-example-getRequestToken
-* 
+*
 * Demonstrate the use of the getRequestToken() function from the OAuth_1a class
 *
 * @package OAuth_1a
 * @author Joshua Zeitlinger <me@joshuazeitlinger.com>
 * @link  https://github.com/joshuaspring9/Oauth_1a
-* @version  0.1.1
+* @version  0.2
 *
 *
 * History:
 * version 0.1.1 - file created
+* version 0.2 - add try/catch block for exceptions
 *
 */
 
@@ -23,13 +24,20 @@ session_start();
 
 require "../OAuth_1a.php";
 
-$s = new OAuth_1a("consumer","consumer_sercret","HMAC-SHA1", "AUTHORIZATION");
+try {
 
-$result = $s->getRequestToken("http://api.shapeways.com/oauth1/request_token/v1", "http://yoursite.com/curl-example-geToken.php", "GET");
+  $s = new OAuth_1a("consumer","consumer_sercret","HMAC-SHA1", "AUTHORIZATION");
 
-$data = $s->getLastResponse();
+  $result = $s->getRequestToken("http://api.shapeways.com/oauth1/request_token/v1", "http://yoursite.com/curl-example-geToken.php", "GET");
 
-$_SESSION['secret'] = $data['oauth_token_secret'];
+  $data = $s->getLastResponse();
 
+  $_SESSION['secret'] = $data['oauth_token_secret'];
 
-header("Location: ".$data['authentication_url']);
+  header("Location: ".$data['authentication_url']);
+
+} catch (OAuth_1a_Exception $e){
+
+  print_r($e->getAll());
+
+}
