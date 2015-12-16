@@ -1,7 +1,7 @@
 <?php
 /**
 * OAuth_1a
-* 
+*
 * A PHP Library to interact with OAuth version 1.0a protected resources following
 * PHP's PECL OAuth method of functioning as closely as possible
 *
@@ -14,6 +14,7 @@
 * History:
 * version 0.1 - first version
 * version 0.1.1 - put OAuth_1a_Exception class in a separate file
+* version 0.2 - no changes in this file
 *
 */
 
@@ -30,8 +31,8 @@ class OAuth_1a  {
 	private $auth_method;
 	private $last_response;
 	private $last_response_debug;
-	
-	
+
+
 	public function __construct($consumer_key_public, $consumer_key_secret, $sig_method, $authentication_method)
 	{
 		$this->consumer_key = $consumer_key_public;
@@ -39,10 +40,10 @@ class OAuth_1a  {
 		$this->signature_method = $sig_method;
 		$this->auth_method = $authentication_method;
 		$this->last_response_debug = array();
-		
+
 	}
- 
-	
+
+
 	public function getRequestToken($url, $callback, $type)
 	{
 		$time = time();
@@ -53,24 +54,24 @@ class OAuth_1a  {
 						"oauth_nonce" => mt_rand(),
 						"oauth_signature_method" => $this->signature_method,
 						"oauth_timestamp" => time(),
-						"oauth_version" => "1.0", 
+						"oauth_version" => "1.0",
 						);
-		
+
 
 		$curl = curl_init();
-		
+
 		if(strtoupper($this->auth_method) == "QUERY")
 			$url = $this->_setupHeader($url, $oauth, null, false, $type);
 		else
 			curl_setopt($curl, CURLOPT_HTTPHEADER, array($this->_setupHeader($url, $oauth, null, true, $type)));
-		
-		curl_setopt($curl, CURLOPT_URL, $url);					
+
+		curl_setopt($curl, CURLOPT_URL, $url);
 		curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
 		curl_setopt($curl, CURLOPT_TIMEOUT, 10);
 		curl_setopt($curl, CURLOPT_HEADER, 1);
 
 		$type = strtoupper($type);
-		
+
 		switch ($type)
 		{
 			case 'POST'  :
@@ -98,32 +99,32 @@ class OAuth_1a  {
 		// var_dump($curl_info);
 		// var_dump($response_header);
 		// var_dump($response_body);
-		
+
 		if(!$response)
 			throw new OAuth_1a_Exception("Connection to the server failed", 0, false, false, false, false);
-		
+
 		//store these for debugging purposes
 		$this->last_response_debug["code"] = $response_code;
 		$this->last_response_debug["headers"] = $response_header;
 		$this->last_response_debug["body"] = $response_code;
-		
+
 		$data = array();
-		
+
 		parse_str($response_body, $data);
-		
+
 		$this->last_response = $data;
-		
+
 		return true;
-		
+
 	}
-	
+
 	public function setToken($token, $secret)
 	{
 		$this->oauth_token = $token;
 		$this->oauth_token_secret = $secret;
 	}
-	
-	
+
+
 	public function getAccessToken($url, $oauth_verifier, $type)
 	{
 		$time = time();
@@ -135,23 +136,23 @@ class OAuth_1a  {
 						"oauth_timestamp" => time(),
 						"oauth_token" => $this->oauth_token,
 						"oauth_verifier" => $oauth_verifier,
-						"oauth_version" => "1.0", 
+						"oauth_version" => "1.0",
 						);
 
 		$curl = curl_init();
-		
+
 		if(strtoupper($this->auth_method) == "QUERY")
 			$url = $this->_setupHeader($url, $oauth, null, false, $type);
 		else
 			curl_setopt($curl, CURLOPT_HTTPHEADER, array($this->_setupHeader($url, $oauth, null, true, $type)));
-		
-		curl_setopt($curl, CURLOPT_URL, $url);					
+
+		curl_setopt($curl, CURLOPT_URL, $url);
 		curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
 		curl_setopt($curl, CURLOPT_TIMEOUT, 10);
 		curl_setopt($curl, CURLOPT_HEADER, 1);
 
 		$type = strtoupper($type);
-		
+
 		switch ($type)
 		{
 			case 'POST'  :
@@ -160,7 +161,7 @@ class OAuth_1a  {
 				break;
 			default:
 				throw new OAuth_1a_Exception("The verb $type is not a RESTful verb or not supported", 4, false, false, false, false);
-		
+
 		}
 
 		$response = curl_exec($curl);
@@ -169,39 +170,39 @@ class OAuth_1a  {
 		$response_header = substr($response, 0, $header_size);
 		$response_body = substr($response, $header_size);
 
-		
+
 		if ($response_code != 200)
 		{
 			throw new OAuth_1a_Exception("An error occurred while fetching the access token", 2, $response_header, $response_body, $response_code, $header_size);
 		}
 
-		
+
 
 		// Uncomment next four lines to see/debug full cURL response
 		// $curl_info = curl_getinfo($curl);
 		// var_dump($curl_info);
 		// var_dump($response_header);
 		// var_dump($response_body);
-		
+
 		if(!$response)
 			throw new OAuth_1a_Exception("Connection to the server failed", 0, false, false, false, false);
-		
-		
+
+
 		//store these for debugging purposes
 		$this->last_response_debug["code"] = $response_code;
 		$this->last_response_debug["headers"] = $response_header;
 		$this->last_response_debug["body"] = $response_code;
-		
+
 		$data = array();
-		
+
 		parse_str($response_body, $data);
-		
+
 		$this->last_response = $data;
-		
+
 		return true;
-		
+
 	}
-	
+
 	public function fetch($url, $extra_parameters, $type, $headers = null)
 	{
 		$time = time();
@@ -212,16 +213,16 @@ class OAuth_1a  {
 						"oauth_signature_method" => $this->signature_method,
 						"oauth_timestamp" => time(),
 						"oauth_token" => $this->oauth_token,
-						"oauth_version" => "1.0", 
+						"oauth_version" => "1.0",
 						);
-		
+
 		if($extra_parameters != null)
 			$with_extras = array_merge($oauth, $extra_parameters);
 		else
 			$with_extras = $oauth;
 		$curl = curl_init();
-		
-		
+
+
 		if(strtoupper($this->auth_method) == "QUERY")
 			$url = $this->_setupHeader($url, $oauth, $with_extras, false, $type);
 		else
@@ -231,15 +232,15 @@ class OAuth_1a  {
 				$heads = array_merge($heads, $headers);
 			curl_setopt($curl, CURLOPT_HTTPHEADER, $heads);
 		}
-		
+
 		curl_setopt($curl, CURLOPT_FOLLOWLOCATION, false);
-		curl_setopt($curl, CURLOPT_URL, $url);					
+		curl_setopt($curl, CURLOPT_URL, $url);
 		curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
 		curl_setopt($curl, CURLOPT_TIMEOUT, 10);
 		curl_setopt($curl, CURLOPT_HEADER, 1);
 
 		$type = strtoupper($type);
-		
+
 		switch ($type)
 		{
 			case 'POST'  :
@@ -274,32 +275,32 @@ class OAuth_1a  {
 		// var_dump($curl_info);
 		// var_dump($response_header);
 		// var_dump($response_body);
-		
+
 		if(!$response)
 			throw new OAuth_1a_Exception("Connection to the server failed", 0, false, false, false, false);
-		
+
 		//store these for debugging purposes
 		$this->last_response_debug["code"] = $response_code;
 		$this->last_response_debug["headers"] = $response_header;
 		$this->last_response_debug["body"] = $response_code;
-		
+
 		$this->last_response = $response_body;
-		
+
 		return true;
-		
-		
+
+
 	}
-	
+
 	public function getLastResponse()
 	{
 		return $this->last_response;
 	}
-	
+
 	public function getLastResponseDebug()
 	{
 		return $this->last_response_debug;
 	}
-	
+
 	private function _get_base($url, $method, $params) {
 		$holder = array();
 		ksort($params);
@@ -308,7 +309,7 @@ class OAuth_1a  {
 		}
 		return $method ."&". rawurlencode($url) ."&". rawurlencode(implode("&", $holder));
 	}
-	
+
 	private function _setupHeader($url, $oauth, $with_extras, $auth_type, $type)
 	{
 		if(empty($this->oauth_token_secret))
@@ -328,7 +329,7 @@ class OAuth_1a  {
 		{
 			throw new OAuth_1a_Exception("The signature method ".$this->signature_method." is currently not supported", 3, false, false, false, false);
 		}
-		
+
 		if($auth_type)
 		{
 			$oauthString = "Authorization: OAuth   " ;
@@ -337,14 +338,14 @@ class OAuth_1a  {
 				$stringValue = rawurlencode($value);
 				$oauthString .= "$stringKey=\"$stringValue\", ";
 			}
-			
+
 			$oauthString = rtrim($oauthString,", ");
 
 		}
 		else
 		{
 			$oauthString = "";
-			foreach($oauth as $key=>$value) 
+			foreach($oauth as $key=>$value)
 			{
 				$stringKey = rawurlencode($key);
 				$stringValue = rawurlencode($value);
@@ -358,6 +359,6 @@ class OAuth_1a  {
 		}
 
 		return $oauthString;
-		
+
 	}
 }
