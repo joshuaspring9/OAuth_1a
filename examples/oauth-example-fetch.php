@@ -35,6 +35,7 @@ try {
 
 } catch (OAuth_1a_Exception $e){
 
+  //to see what info you can get, see the OAuth_1a_Exception class
   print_r($e->getAll());
 
 }
